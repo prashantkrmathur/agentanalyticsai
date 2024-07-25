@@ -51,14 +51,25 @@ export class ProductService {
   public async updateProduct(id: string, updateProductDto: UpdateProductDto) {
     try {
       // check id first for updating a product
+
       const product = await this.productRepository.findOne({
         where : {id : id}
       })
       if(!product) {
         throw new Error('Product not found')
       }
-      const updatedProduct = await this.productRepository.save(updateProductDto)
-      return {statusCode : 200, product : updatedProduct}
+      const updatedProductData = {
+        ...product,
+        ...updateProductDto
+      };
+      console.log('====================================');
+      console.log("dto", updateProductDto);
+      console.log('====================================');
+      const updatedProduct = await this.productRepository.save(updatedProductData)
+      console.log('====================================');
+      console.log("updatedProduct",updatedProduct);
+      console.log('====================================');
+      return {statusCode : 200, product : updateProductDto}
     } catch (error) {
       console.log("error while updating a product", error);
       return {statusCode : 400, message : error.message}

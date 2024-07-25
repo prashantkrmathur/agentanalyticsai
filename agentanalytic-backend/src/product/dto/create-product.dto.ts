@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsOptional } from "class-validator";
-import { ProductCategory } from "src/entities/Product.entity";
+import { ProductCategory } from "../../entities/Product.entity";
 
 export class CreateProductDto {
     @IsNotEmpty()

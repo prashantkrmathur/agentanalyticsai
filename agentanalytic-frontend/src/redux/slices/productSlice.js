@@ -32,6 +32,32 @@ export const addProduct = createAsyncThunk(
   }
 );
 
+// Async thunk for updating a product
+export const updateProduct = createAsyncThunk(
+  'products/updateProduct',
+  async ({ id, data }, { rejectWithValue, getState }) => {
+    const { token } = getState().auth;
+    try {
+      console.log("id", id);
+      console.log("data", data);
+      const response = await axios.patch(
+        `/product/update/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log("response", response);
+      return response.data.product;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: 'products',
   initialState: {
@@ -55,6 +81,22 @@ const productSlice = createSlice({
       })
       .addCase(addProduct.fulfilled, (state, action) => {
         state.products.push(action.payload);
+      })
+      .addCase(updateProduct.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const index = state.products.findIndex(
+          (product) => product.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.products[index] = action.payload;
+        }
+      })
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });
