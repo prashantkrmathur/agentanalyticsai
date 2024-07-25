@@ -14,6 +14,7 @@ const LoginForm = ({ onSuccess }) => {
       const response = await dispatch(loginUser(values)).unwrap();
       if (response.token) {
         // Login successful
+        localStorage.setItem("token", response.token)
         message.success('Login successful!');
         onSuccess(); // Close modal or redirect
       } else {

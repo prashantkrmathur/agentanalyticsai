@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, InputNumber, Button, Select, message } from 'antd';
 import axios from '../../api/api';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const { Option } = Select;
 
@@ -13,7 +14,8 @@ const CreateEditProduct = () => {
   const productId = query.get('id');
   const [selectedFields, setSelectedFields] = useState([]);
   const [productData, setProductData] = useState({});
-
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  
   useEffect(() => {
     if (productId) {
       const fetchProduct = async () => {
@@ -42,6 +44,9 @@ const CreateEditProduct = () => {
 
     try {
       if (productId) {
+        console.log('====================================');
+        console.log(isAuthenticated);
+        console.log('====================================');
         await axios.patch(`/product/update/${productId}`, updateValues, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
