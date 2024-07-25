@@ -18,7 +18,6 @@ export class ProductController {
     return await this.productService.findAllProduct();
   }
 
-  @UseGuards(AuthGuard)
   @Get(':id')
   getProductById(@Param('id') id: string) {
     return this.productService.getProductById(id);

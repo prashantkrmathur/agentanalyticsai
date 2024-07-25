@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Layout, Button, Modal, Typography } from 'antd';
-import { LoginOutlined, UserAddOutlined, LogoutOutlined } from '@ant-design/icons';
+import { LoginOutlined, UserAddOutlined, LogoutOutlined, PlusOutlined } from '@ant-design/icons';
 import ProductCard from './components/Products/ProductCard';
 import ProductDetail from './components/Products/ProductDetail';
 import CreateEditProduct from './components/Products/CreateEditProduct';
+import AddNewProductForm from './components/Products/AddNewProductForm';
 import LoginForm from './components/Authentication/LoginForm';
 import SignupForm from './components/Authentication/SignupForm';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +18,7 @@ const App = () => {
   const dispatch = useDispatch();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const { isAuthenticated, user, token } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -57,6 +59,14 @@ const App = () => {
                   style={{ marginRight: 16 }}
                 >
                   Logout
+                </Button>
+                <Button
+                  type="link"
+                  icon={<PlusOutlined />}
+                  onClick={() => setIsAddProductModalOpen(true)}
+                  style={{ marginRight: 16 }}
+                >
+                  Add New Product
                 </Button>
               </>
             ) : (
@@ -102,6 +112,14 @@ const App = () => {
           onCancel={() => setIsSignupModalOpen(false)}
         >
           <SignupForm onSuccess={() => setIsSignupModalOpen(false)} />
+        </Modal>
+        <Modal
+          title="Add New Product"
+          open={isAddProductModalOpen}
+          footer={null}
+          onCancel={() => setIsAddProductModalOpen(false)}
+        >
+          <AddNewProductForm onSuccess={() => setIsAddProductModalOpen(false)} />
         </Modal>
       </Layout>
     </Router>

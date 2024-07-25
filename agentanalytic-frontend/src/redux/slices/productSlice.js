@@ -20,11 +20,7 @@ export const fetchProductDetail = createAsyncThunk(
   async (id, { rejectWithValue, getState }) => {
     const { token } = getState().auth;
     try {
-      const response = await axios.get(`/product/${id}`,{
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(`/product/${id}`);
       return response.data.product;
     } catch (error) {
       return rejectWithValue(error.response.data);
