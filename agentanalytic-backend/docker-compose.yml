@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend # Path to your frontend Dockerfile
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    environment:
+      - API_URL=http://backend:3000 # Make sure your frontend communicates with the backend correctly
+
+  backend:
+    build:
+      context: ./backend # Path to your backend Dockerfile
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./backend:/app # Map your backend code directory if needed
+
+  # Add other services (like databases) if needed
