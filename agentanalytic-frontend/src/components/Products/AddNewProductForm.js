@@ -69,7 +69,7 @@ const AddNewProductForm = ({ onSuccess }) => {
       <Form.Item
         label="Image URL"
         name="image"
-        rules={[{ required: false, message: 'Please input the image URL!' }]}
+        rules={[{ required: true, message: 'Please input the image URL!' }]}
       >
         <Input />
       </Form.Item>
