@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
+import { useDispatch } from 'react-redux';
 import axios from '../../api/api'; // Import your axios instance
+import { loginUser } from '../../redux/slices/authSlice'; // Import the login action
 
 const SignupForm = ({ onSuccess }) => {
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
@@ -19,9 +23,21 @@ const SignupForm = ({ onSuccess }) => {
       });
 
       // Check if the response status is success
-      if (response.statusCode === 201) {
-        message.success('Signup successful!');
-        onSuccess(); // Close modal or redirect
+      if (response.status === 201) {
+        // Automatically log in the user after successful signup
+        const loginResponse = await dispatch(loginUser({
+          email: values.email,
+          password: values.password,
+        })).unwrap();
+
+        // Check if login was successful
+        if (loginResponse.token) {
+          message.success('Signup and login successful!');
+          onSuccess(); // Close modal or redirect
+        } else {
+          // Handle login failure
+          message.error('Login failed: ' + (loginResponse.message || 'An error occurred.'));
+        }
       } else {
         // Handle case where status code is not 200/201
         message.error('Signup failed: ' + (response.data.message || 'An error occurred.'));
@@ -40,6 +56,7 @@ const SignupForm = ({ onSuccess }) => {
 
   return (
     <Form
+      form={form}
       name="signup"
       onFinish={onFinish}
       layout="vertical"

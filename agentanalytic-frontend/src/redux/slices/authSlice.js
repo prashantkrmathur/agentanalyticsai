@@ -1,11 +1,25 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../api/api';
 
-// Thunks for login and profile fetching
+// Thunks for login, signup, and profile fetching
 export const loginUser = createAsyncThunk('auth/loginUser', async (credentials, { rejectWithValue }) => {
   try {
     const response = await axios.post('/auth/login', credentials);
     return response.data; // Returns the token and user data
+  } catch (error) {
+    return rejectWithValue(error.response.data.message);
+  }
+});
+
+export const signupUser = createAsyncThunk('auth/signupUser', async (credentials, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await axios.post('/auth/register', credentials);
+    // Automatically log in the user after signup
+    const loginResponse = await dispatch(loginUser({
+      email: credentials.email,
+      password: credentials.password,
+    })).unwrap();
+    return loginResponse; // Return login response which includes token and user data
   } catch (error) {
     return rejectWithValue(error.response.data.message);
   }
@@ -41,6 +55,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Handle login actions
       .addCase(loginUser.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -55,6 +70,22 @@ const authSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
+      // Handle signup actions
+      .addCase(signupUser.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(signupUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      // Handle fetch user profile actions
       .addCase(fetchUserProfile.pending, (state) => {
         state.status = 'loading';
         state.error = null;
