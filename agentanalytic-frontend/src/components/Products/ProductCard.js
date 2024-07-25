@@ -28,8 +28,11 @@ const ProductCard = () => {
     }
   };
 
+  const handleCardClick = (id) => {
+    navigate(`/product/${id}`);
+  };
+
   const renderRating = (rating) => {
-    // Generate an array of stars based on the rating
     return Array.from({ length: 5 }, (_, index) => (
       <StarFilled
         key={index}
@@ -44,6 +47,7 @@ const ProductCard = () => {
         <Col span={8} key={product.id}>
           <Card
             hoverable
+            onClick={() => handleCardClick(product.id)} // Handle card click
             cover={
               <div style={cardImageWrapperStyle}>
                 <img
@@ -57,12 +61,16 @@ const ProductCard = () => {
               isAuthenticated && (
                 <Button
                   type="primary"
-                  onClick={() => handleEdit(product.id)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent click event from propagating to the Card
+                    handleEdit(product.id);
+                  }}
                 >
                   Edit
                 </Button>
               ),
             ]}
+            style={cardStyle} // Apply card style with margin and padding
           >
             <Meta
               title={product.name}
@@ -96,6 +104,20 @@ const imageStyle = {
   objectFit: 'contain',
   width: '100%',
   height: '100%',
+};
+
+// Style for the Card component including margin, padding, and hover effect
+const cardStyle = {
+  margin: '16px',
+  padding: '16px',
+  borderRadius: '8px',
+  transition: 'transform 0.3s, box-shadow 0.3s',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  cursor: 'pointer',
+  '&:hover': {
+    transform: 'scale(1.05)',
+    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+  },
 };
 
 export default ProductCard;
