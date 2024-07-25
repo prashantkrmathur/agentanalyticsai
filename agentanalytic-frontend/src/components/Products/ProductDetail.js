@@ -1,37 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, Descriptions, Image } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { Card, Descriptions, Image, Spin } from 'antd';
+import { fetchProductDetail } from '../../redux/slices/productSlice';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
+  const dispatch = useDispatch();
+  const { productDetail, status } = useSelector((state) => state.product);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await axios.get(`/api/product/${id}`);
-        setProduct(response.data.product);
-      } catch (error) {
-        console.error('Error fetching product:', error);
-      }
-    };
+    if (id) {
+      dispatch(fetchProductDetail(id));
+    }
+  }, [dispatch, id]);
 
-    fetchProduct();
-  }, [id]);
+  if (status === 'loading') {
+    return <Spin size="large" />;
+  }
 
-  if (!product) return null;
+  if (!productDetail) return null;
 
   return (
-    <Card title={product.name}>
-      <Image src={product.image} />
+    <Card title={productDetail.name}>
+      <Image src={productDetail.image} />
       <Descriptions bordered>
-        <Descriptions.Item label="Category">{product.category}</Descriptions.Item>
-        <Descriptions.Item label="Price">${product.price}</Descriptions.Item>
-        <Descriptions.Item label="Discounted Price">${product.discountedPrice}</Descriptions.Item>
-        <Descriptions.Item label="Description">{product.description}</Descriptions.Item>
-        <Descriptions.Item label="Rating">{product.rating}</Descriptions.Item>
-        <Descriptions.Item label="Quantity">{product.quantity}</Descriptions.Item>
+        <Descriptions.Item label="Category">{productDetail.category}</Descriptions.Item>
+        <Descriptions.Item label="Price">${productDetail.price}</Descriptions.Item>
+        <Descriptions.Item label="Discounted Price">${productDetail.discountedPrice}</Descriptions.Item>
+        <Descriptions.Item label="Description">{productDetail.description}</Descriptions.Item>
+        <Descriptions.Item label="Rating">{productDetail.rating}</Descriptions.Item>
+        <Descriptions.Item label="Quantity">{productDetail.quantity}</Descriptions.Item>
       </Descriptions>
     </Card>
   );

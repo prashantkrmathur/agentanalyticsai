@@ -92,21 +92,18 @@ const ProductCard = () => {
   );
 };
 
-// Ensure the card container maintains the aspect ratio
 const cardImageWrapperStyle = {
   width: '100%',
-  height: '200px', // Adjust based on your design needs
+  height: '200px', 
   overflow: 'hidden',
 };
 
-// Adjust the image style to fit inside the wrapper without cropping
 const imageStyle = {
   objectFit: 'contain',
   width: '100%',
   height: '100%',
 };
 
-// Style for the Card component including margin, padding, and hover effect
 const cardStyle = {
   margin: '16px',
   padding: '16px',

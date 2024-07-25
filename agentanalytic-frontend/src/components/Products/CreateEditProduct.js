@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, InputNumber, Button, Select, message } from 'antd';
-import axios from '../../api/api'; // Adjust import based on your folder structure
+import axios from '../../api/api';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
