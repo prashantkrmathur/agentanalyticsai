@@ -66,7 +66,7 @@ const ProductCard = () => {
                     handleEdit(product.id);
                   }}
                 >
-                  Edit
+                  Edit Product Details
                 </Button>
               ),
             ]}
