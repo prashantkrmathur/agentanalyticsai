@@ -60,13 +60,22 @@ const App = () => {
                 >
                   Logout
                 </Button>
-                marginRight: 16,
-      backgroundColor: '#e6f7ff',
-      border: '1px solid #91d5ff',
-      color: '#1890ff',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      padding: '5px 10px',
-      borderRadius: '4px',
+                <Button
+                  type="link"
+                  icon={<PlusOutlined />}
+                  onClick={() => setIsAddProductModalOpen(true)}
+                  style={{
+                    marginRight: 16,
+                    backgroundColor: '#e6f7ff',
+                    border: '1px solid #91d5ff',
+                    color: '#1890ff',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                    padding: '5px 10px',
+                    borderRadius: '4px',
+                  }}
+                >
+                  Add New Product
+                </Button>
               </>
             ) : (
               <>
